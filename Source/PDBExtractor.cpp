@@ -9,6 +9,10 @@
 #include <fstream>
 #include <stdexcept>
 
+#include "HyperDbgExport.h"
+#include "HyperDbgGlobals.h"
+
+
 namespace
 {
 	//
@@ -220,6 +224,10 @@ PDBExtractor::ParseParameters(
 		//
 		// Handling of options.
 		//
+#ifdef HYPERDBG_CODES
+        g_IsOutputToFile = FALSE;
+#endif
+
 
 		switch (CurrentArgument[1])
 		{
@@ -231,6 +239,10 @@ PDBExtractor::ParseParameters(
 
 				++ArgumentPointer;
 				m_Settings.OutputFilename = NextArgument;
+			
+#ifdef HYPERDBG_CODES
+                g_IsOutputToFile = TRUE;
+#endif
 
 				if (m_Settings.SymbolName != "%")
 				{
@@ -452,18 +464,23 @@ PDBExtractor::PrintPDBHeader()
 			m_PDB.GetMachineType() == IMAGE_FILE_MACHINE_ARMNT ? "ArmNT" :
 			m_PDB.GetMachineType() == IMAGE_FILE_MACHINE_ARM64 ? "ARM64" :
 			m_PDB.GetMachineType() == IMAGE_FILE_MACHINE_CHPE_X86 ? "CHPE_X86" :
-			                                                     "Unknown";
+				                                                  "Unknown";
 
-		static char HEADER_FILE_HEADER_FORMATTED[16 * 1024];
+		//
+		// We've asked Petr to remove this watermark, and he kindly allowed
+		// us to remove it, thank you Petr :)
+		//
 
-		sprintf_s(
-			HEADER_FILE_HEADER_FORMATTED, HEADER_FILE_HEADER,
-			m_Settings.PdbPath.c_str(),
-			ArchitectureString,
-			m_PDB.GetMachineType()
-			);
-
-		*m_Settings.PdbHeaderReconstructorSettings.OutputFile << HEADER_FILE_HEADER_FORMATTED;
+		// static char HEADER_FILE_HEADER_FORMATTED[16 * 1024];
+		// 
+		// sprintf_s(
+		// 	HEADER_FILE_HEADER_FORMATTED, HEADER_FILE_HEADER,
+		// 	m_Settings.PdbPath.c_str(),
+		// 	ArchitectureString,
+		// 	m_PDB.GetMachineType()
+		// 	);
+		//
+		//*m_Settings.PdbHeaderReconstructorSettings.OutputFile << HEADER_FILE_HEADER_FORMATTED;
 	}
 }
 
