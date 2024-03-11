@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iomanip>
 
+// 改成静态库
 Callback g_MessageHandler       = NULL;
 BOOLEAN  g_IsOutputToFile       = FALSE;
 BOOLEAN  g_ShowInOffestFormat   = FALSE;
